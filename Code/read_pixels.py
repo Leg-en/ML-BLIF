@@ -9,8 +9,8 @@ import pandas
 import multiprocessing as mp
 import csv
 import queue
-
-
+from sklearn.neural_network import MLPClassifier
+from joblib import dump, load
 
 @jit
 def buildKernels(ksize):
@@ -31,7 +31,7 @@ def buildIMGS(kernels, img):
 
 
 
-@jit(parallel=True)
+
 def preprocess(Image: str, csv, ksize, conn) -> None:
     frame = pandas.read_csv(csv)
     kernels = buildKernels(ksize)
@@ -44,11 +44,14 @@ def preprocess(Image: str, csv, ksize, conn) -> None:
             while xmin <= xmax:
                 r, g, b = [], [], []
                 for i in imgs:
-                    r.append(i[ymin, xmin, 0])
-                    g.append(i[ymin, xmin, 1])
-                    b.append(i[ymin, xmin, 2])
+                    try:
+                        r.append(i[ymin, xmin, 0])
+                        g.append(i[ymin, xmin, 1])
+                        b.append(i[ymin, xmin, 2])
+                    except IndexError:
+                        continue
                 #r, g und b sind listen die für jeden pixel alle 25x25 RGB werte enthalten
-                conn.send([r,g,b])
+                conn.send([r,g,b, row["class"]])
                 xmin += 1
             ymin += 1
     conn.close()
@@ -64,6 +67,21 @@ def print_rgb(conn):
             except EOFError:
                 return
 
+def pcn(conn):
+    clf = MLPClassifier(solver='adam', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
+    while True:
+        try:
+            x = conn.recv()
+            data=[]
+            y=[]
+            for i in range(25):
+                data.append([x[0][i], x[1][i], x[2][i]])
+                y.append(x[3])
+
+            clf.partial_fit(data, y, classes=["Wasser","Strand","Himmel"])
+        except EOFError:
+            dump(clf, 'filename.joblib')
+            return
 
 
 if __name__ == '__main__':
@@ -71,7 +89,8 @@ if __name__ == '__main__':
     t = mp.Process(target=preprocess, args=(r'C:\Users\Emily\Documents\Bachelor\convertet_png',
                r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
     t.start()
-    t2 = mp.Process(target=print_rgb, args=(child_conn,))
+    #t2 = mp.Process(target=print_rgb, args=(child_conn,))
+    t2 = mp.Process(target=pcn, args=(child_conn,))
     t2.start()
     t.join()
     t2.join()
