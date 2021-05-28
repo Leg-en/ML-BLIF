@@ -1,25 +1,24 @@
-import sys
-import time
-import cv2
-import os
-import numpy as np
-import numba
-from numba import jit
-import pandas
-import multiprocessing as mp
 import csv
-import queue
+import multiprocessing as mp
+import os
+
+import cv2
+import numpy as np
+import pandas
+from joblib import dump
+from numba import jit
 from sklearn.neural_network import MLPClassifier
-from joblib import dump, load
+
 
 @jit
 def buildKernels(ksize):
     kernels = []
-    for i in range(ksize*ksize):
+    for i in range(ksize * ksize):
         x = np.zeros((ksize, ksize))
-        x[i%ksize][(ksize-1) - i%ksize] = 1
+        x[i % ksize][(ksize - 1) - i % ksize] = 1
         kernels.append(x)
     return kernels
+
 
 @jit(parallel=True)
 def buildIMGS(kernels, img):
@@ -30,8 +29,6 @@ def buildIMGS(kernels, img):
     return images
 
 
-
-
 def preprocess(Image: str, csv, ksize, conn) -> None:
     frame = pandas.read_csv(csv)
     kernels = buildKernels(ksize)
@@ -39,21 +36,19 @@ def preprocess(Image: str, csv, ksize, conn) -> None:
         path = os.path.join(Image, row["filename"])
         img = cv2.imread(path)
         imgs = buildIMGS(kernels, img)
-        xmin,xmax,ymin,ymax = row["xmin"],row["xmax"],row["ymin"],row["ymax"]
-        while ymin <= ymax:
-            while xmin <= xmax:
+        xmin, xmax, ymin, ymax = row["xmin"], row["xmax"], row["ymin"], row["ymax"]
+        for y in range( ymin, ymax):
+            for x in range(xmin, xmax):
                 r, g, b = [], [], []
                 for i in imgs:
                     try:
-                        r.append(i[ymin, xmin, 0])
-                        g.append(i[ymin, xmin, 1])
-                        b.append(i[ymin, xmin, 2])
+                        r.append(i[y, x, 0])
+                        g.append(i[y, x, 1])
+                        b.append(i[y, x, 2])
                     except IndexError:
                         continue
-                #r, g und b sind listen die für jeden pixel alle 25x25 RGB werte enthalten
-                conn.send([r,g,b, row["class"]])
-                xmin += 1
-            ymin += 1
+                # r, g und b sind listen die für jeden pixel alle 25x25 RGB werte enthalten
+                conn.send([r, g, b, row["class"]])
     conn.close()
 
 
@@ -67,18 +62,18 @@ def print_rgb(conn):
             except EOFError:
                 return
 
+
 def pcn(conn):
-    clf = MLPClassifier(solver='adam', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
+    clf = MLPClassifier(solver='adam', alpha=1e-5, hidden_layer_sizes=(1, 10), random_state=1)
     while True:
         try:
             x = conn.recv()
-            data=[]
-            y=[]
-            for i in range(25):
+            data = []
+            y = []
+            for i in range(len(x[0])):
                 data.append([x[0][i], x[1][i], x[2][i]])
                 y.append(x[3])
-
-            clf.partial_fit(data, y, classes=["Wasser","Strand","Himmel"])
+            clf.partial_fit(data, y, classes=["Wasser", "Strand", "Himmel"])
         except EOFError:
             dump(clf, 'filename.joblib')
             return
@@ -87,9 +82,9 @@ def pcn(conn):
 if __name__ == '__main__':
     parent_conn, child_conn = mp.Pipe()
     t = mp.Process(target=preprocess, args=(r'C:\Users\Emily\Documents\Bachelor\convertet_png',
-               r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
+                                            r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
     t.start()
-    #t2 = mp.Process(target=print_rgb, args=(child_conn,))
+    # t2 = mp.Process(target=print_rgb, args=(child_conn,))
     t2 = mp.Process(target=pcn, args=(child_conn,))
     t2.start()
     t.join()
