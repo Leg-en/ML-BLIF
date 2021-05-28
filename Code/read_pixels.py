@@ -1,6 +1,5 @@
 import sys
 import time
-
 import cv2
 import os
 import numpy as np
@@ -9,14 +8,14 @@ from numba import jit
 import pandas
 import multiprocessing as mp
 import csv
-
+import queue
 
 
 
 @jit
 def buildKernels(ksize):
     kernels = []
-    for i in range(ksize):
+    for i in range(ksize*ksize):
         x = np.zeros((ksize, ksize))
         x[i%ksize][(ksize-1) - i%ksize] = 1
         kernels.append(x)
@@ -33,7 +32,7 @@ def buildIMGS(kernels, img):
 
 
 @jit(parallel=True)
-def preprocess(Image: str, csv, ksize, queue) -> None:
+def preprocess(Image: str, csv, ksize, conn) -> None:
     frame = pandas.read_csv(csv)
     kernels = buildKernels(ksize)
     for index, row in frame.iterrows():
@@ -49,28 +48,30 @@ def preprocess(Image: str, csv, ksize, queue) -> None:
                     g.append(i[ymin, xmin, 1])
                     b.append(i[ymin, xmin, 2])
                 #r, g und b sind listen die für jeden pixel alle 25x25 RGB werte enthalten
-                queue.put([r,g,b])
+                conn.send([r,g,b])
                 xmin += 1
             ymin += 1
+    conn.close()
 
 
-def print_rgb(queue):
+def print_rgb(conn):
     with open("test.csv", "w", newline='') as csvfile:
         writer = csv.writer(csvfile)
-        for job in iter(queue.get, None):
-            writer.writerow(job)
+        while True:
+            try:
+                x = conn.recv()
+                writer.writerow(x)
+            except EOFError:
+                return
 
 
 
 if __name__ == '__main__':
-    q = mp.Queue()
+    parent_conn, child_conn = mp.Pipe()
     t = mp.Process(target=preprocess, args=(r'C:\Users\Emily\Documents\Bachelor\convertet_png',
-               r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, q,))
-    #preprocess(r'C:\Users\Emily\Documents\Bachelor\convertet_png',
-    #           r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, q)
+               r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
     t.start()
-    t2 = mp.Process(target=print_rgb, args=(q,))
+    t2 = mp.Process(target=print_rgb, args=(child_conn,))
     t2.start()
     t.join()
-    time.sleep()
-    t2.terminate()
+    t2.join()
