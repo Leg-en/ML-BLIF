@@ -26,7 +26,7 @@ def buildIMGS(kernels, img):
     for kernel in kernels:
         cv_filter = cv2.filter2D(img, -1, kernel)
         images.append(cv_filter)
-    return images
+    return np.array(images)
 
 
 def preprocess(Image: str, csv, ksize, conn) -> None:
@@ -41,15 +41,15 @@ def preprocess(Image: str, csv, ksize, conn) -> None:
         for y in range( ymin, ymax):
             for x in range(xmin, xmax):
                 r, g, b = [], [], []
-                for i in imgs:
-                    try:
-                        r.append(i[y, x, 0])
-                        g.append(i[y, x, 1])
-                        b.append(i[y, x, 2])
-                    except IndexError:
-                        continue
+                img_ = imgs[:,y,x].tolist()
+
+                #r = img_[:,0].tolist()
+                #g = img_[:,1].tolist()
+                #b = img_[:,2].tolist()
+
                 # r, g und b sind listen die für jeden pixel alle 25x25 RGB werte enthalten
-                conn.send([r, g, b, row["class"]])
+                conn.send([img_, row["class"]])
+        print("preprocessed: ", row["filename"])
     conn.close()
     print("Image Processing Finished")
     return
@@ -72,11 +72,10 @@ def pcn(conn):
     while True:
         try:
             x = conn.recv()
-            data = []
+            data = x[0]
             y = []
             for i in range(len(x[0])):
-                data.append([x[0][i], x[1][i], x[2][i]])
-                y.append(x[3])
+                y.append(x[1])
             clf.partial_fit(data, y, classes=["Wasser", "Strand", "Himmel"])
         except EOFError:
             dump(clf, 'filename.joblib')
@@ -86,10 +85,10 @@ def pcn(conn):
 
 if __name__ == '__main__':
     parent_conn, child_conn = mp.Pipe()
-    #t = mp.Process(target=preprocess, args=(r'C:\Users\Emily\Documents\Bachelor\convertet_png',
-    #                                        r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
-    t = mp.Process(target=preprocess, args=(r'/home/pi/Desktop/convertet_png',
-                                            r"/home/pi/Desktop/out.csv", 5, parent_conn,))
+    t = mp.Process(target=preprocess, args=(r'C:\Users\Emily\Documents\Bachelor\convertet_png',
+                                            r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
+    #t = mp.Process(target=preprocess, args=("/home/phoenix/Documents/ImageSeg-Kurs/Drohnenbilder_convertet/",
+    #                                        "out.csv", 5, parent_conn,))
     t.start()
     # t2 = mp.Process(target=print_rgb, args=(child_conn,))
     t2 = mp.Process(target=pcn, args=(child_conn,))
