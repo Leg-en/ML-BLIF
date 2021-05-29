@@ -6,11 +6,11 @@ import cv2
 import numpy as np
 import pandas
 from joblib import dump
-from numba import jit
+#from numba import jit
 from sklearn.neural_network import MLPClassifier
 
 
-@jit
+#@jit
 def buildKernels(ksize):
     kernels = []
     for i in range(ksize * ksize):
@@ -20,7 +20,7 @@ def buildKernels(ksize):
     return kernels
 
 
-@jit(parallel=True)
+#@jit(parallel=True)
 def buildIMGS(kernels, img):
     images = []
     for kernel in kernels:
@@ -30,6 +30,7 @@ def buildIMGS(kernels, img):
 
 
 def preprocess(Image: str, csv, ksize, conn) -> None:
+    print("Processing Started")
     frame = pandas.read_csv(csv)
     kernels = buildKernels(ksize)
     for index, row in frame.iterrows():
@@ -50,6 +51,8 @@ def preprocess(Image: str, csv, ksize, conn) -> None:
                 # r, g und b sind listen die für jeden pixel alle 25x25 RGB werte enthalten
                 conn.send([r, g, b, row["class"]])
     conn.close()
+    print("Image Processing Finished")
+    return
 
 
 def print_rgb(conn):
@@ -64,7 +67,8 @@ def print_rgb(conn):
 
 
 def pcn(conn):
-    clf = MLPClassifier(solver='adam', alpha=1e-5, hidden_layer_sizes=(1, 10), random_state=1)
+    clf = MLPClassifier(solver='adam', alpha=1e-5, hidden_layer_sizes=(10), random_state=1)
+    print("PCN Training started")
     while True:
         try:
             x = conn.recv()
@@ -76,16 +80,20 @@ def pcn(conn):
             clf.partial_fit(data, y, classes=["Wasser", "Strand", "Himmel"])
         except EOFError:
             dump(clf, 'filename.joblib')
+            print("PCN Trained and Saved")
             return
 
 
 if __name__ == '__main__':
     parent_conn, child_conn = mp.Pipe()
-    t = mp.Process(target=preprocess, args=(r'C:\Users\Emily\Documents\Bachelor\convertet_png',
-                                            r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
+    #t = mp.Process(target=preprocess, args=(r'C:\Users\Emily\Documents\Bachelor\convertet_png',
+    #                                        r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
+    t = mp.Process(target=preprocess, args=(r'/home/pi/Desktop/convertet_png',
+                                            r"/home/pi/Desktop/out.csv", 5, parent_conn,))
     t.start()
     # t2 = mp.Process(target=print_rgb, args=(child_conn,))
     t2 = mp.Process(target=pcn, args=(child_conn,))
     t2.start()
     t.join()
     t2.join()
+    print("Complete")
