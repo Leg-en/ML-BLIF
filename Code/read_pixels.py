@@ -65,7 +65,7 @@ def pcn(conn):
         try:
             x = conn.recv()
             data = x[0]
-            y = np.chararray(len(data), itemsize=10)
+            y = np.chararray(len(data), itemsize=10, unicode=True)
             y[:] = x[1]
             clf.partial_fit(data, y, classes=["Wasser", "Strand", "Himmel"])
             print("Train iteration complete")
