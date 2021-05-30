@@ -38,17 +38,9 @@ def preprocess(Image: str, csv, ksize, conn) -> None:
         img = cv2.imread(path)
         imgs = buildIMGS(kernels, img)
         xmin, xmax, ymin, ymax = row["xmin"], row["xmax"], row["ymin"], row["ymax"]
-        for y in range( ymin, ymax):
-            for x in range(xmin, xmax):
-                r, g, b = [], [], []
-                img_ = imgs[:,y,x].tolist()
-
-                #r = img_[:,0].tolist()
-                #g = img_[:,1].tolist()
-                #b = img_[:,2].tolist()
-
-                # r, g und b sind listen die für jeden pixel alle 25x25 RGB werte enthalten
-                conn.send([img_, row["class"]])
+        img_ = imgs[:,ymin:ymax, xmin:xmax,:]
+        img_ = img_.reshape(img_.shape[0]*img_.shape[1]*img_.shape[2],3)
+        conn.send([img_, row["class"]])
         print("preprocessed: ", row["filename"])
     conn.close()
     print("Image Processing Finished")
@@ -73,10 +65,10 @@ def pcn(conn):
         try:
             x = conn.recv()
             data = x[0]
-            y = []
-            for i in range(len(x[0])):
-                y.append(x[1])
+            y = np.chararray(len(data), itemsize=10)
+            y[:] = x[1]
             clf.partial_fit(data, y, classes=["Wasser", "Strand", "Himmel"])
+            print("Train iteration complete")
         except EOFError:
             dump(clf, 'filename.joblib')
             print("PCN Trained and Saved")
@@ -85,10 +77,10 @@ def pcn(conn):
 
 if __name__ == '__main__':
     parent_conn, child_conn = mp.Pipe()
-    t = mp.Process(target=preprocess, args=(r'C:\Users\Emily\Documents\Bachelor\convertet_png',
+    #t = mp.Process(target=preprocess, args=(r'/home/pi/Desktop/convertet_png',
+    #                                        r"/home/pi/Desktop/out.csv", 5, parent_conn,))
+    t = mp.Process(target=preprocess, args=(r"C:\Users\Emily\Documents\Bachelor\convertet_png",
                                             r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
-    #t = mp.Process(target=preprocess, args=("/home/phoenix/Documents/ImageSeg-Kurs/Drohnenbilder_convertet/",
-    #                                        "out.csv", 5, parent_conn,))
     t.start()
     # t2 = mp.Process(target=print_rgb, args=(child_conn,))
     t2 = mp.Process(target=pcn, args=(child_conn,))
