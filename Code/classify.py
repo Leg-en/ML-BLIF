@@ -7,11 +7,11 @@ from joblib import Parallel, delayed
 from PIL import Image
 
 
-clf = load('filename.joblib')
+clf = load('trained_batch8.joblib')
 
-ksize = 3
-img = cv2.imread('../../Drohnenbilder_convertet/DJI_0007.png')
-img = cv2.resize(img, (int(1000), int(1000)))
+ksize = 5
+img = cv2.imread('../../Drohnenbilder_convertet/DJI_0050.png')
+img = cv2.resize(img, (int(1000), int(750)))
 img_width = img.shape[1]
 img_height = img.shape[0]
 
@@ -40,14 +40,14 @@ def predict_row(row_data, row):
         prediction_string = clf.predict(rgb)
 
         if prediction_string == 'Wasser':
-            prediction_rgb = (0, 0, 255)
+            prediction_bgr = [255, 0, 0]
         elif prediction_string == 'Himmel':
-            prediction_rgb = (255, 255, 255)
+            prediction_bgr = [255, 255, 255]
         elif prediction_string == 'Strand':
-            prediction_rgb = (0, 255, 0)
+            prediction_bgr = [0, 255, 255]
         else:
-            prediction_rgb = (255, 255, 0)
-        predict_image[x] = prediction_rgb
+            prediction_rgb = [0, 0, 0]
+        predict_image[x] = prediction_bgr
     return predict_image
 
 results = Parallel(n_jobs=8,verbose=100)(delayed(predict_row)(img[row, :], row) for row in range(img_height))

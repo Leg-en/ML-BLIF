@@ -9,7 +9,7 @@ from joblib import dump
 #from numba import jit
 from sklearn.neural_network import MLPClassifier
 
-batch_size = 16
+img_scale = 0.25
 
 #@jit
 def buildKernels(ksize):
@@ -29,19 +29,6 @@ def buildIMGS(kernels, img):
         images.append(cv_filter)
     return np.array(images)
 
-def create_batch(img):
-    if batch_size == 1:
-        return img
-    else:
-        img_0 = img[:,:-1:batch_size,:-1:batch_size,:]
-        img_1 = img[:,1::batch_size,1::batch_size,:]
-        img_ = np.empty((img_0.shape[0], img_0.shape[1], img_0.shape[2],3))
-        print(img_.shape, img_0.shape, img_1.shape)
-
-        for i in range(img.shape[0]):
-            img_[i] = np.mean( np.array([ img_0[i], img_1[i] ]), axis=0 )
-        return img_
-
 
 def preprocess(Image: str, csv, ksize, conn) -> None:
     print("Processing Started")
@@ -50,10 +37,18 @@ def preprocess(Image: str, csv, ksize, conn) -> None:
     for index, row in frame.iterrows():
         path = os.path.join(Image, row["filename"])
         img = cv2.imread(path)
+
+        #img = cv2.resize(img, (int(img.shape[1]*img_scale), int(img.shape[0]*img_scale)))
+
         imgs = buildIMGS(kernels, img)
         xmin, xmax, ymin, ymax = row["xmin"], row["xmax"], row["ymin"], row["ymax"]
+
+        #xmin = xmin*img_scale
+        #xmin = xmax*img_scale
+        #xmax = int((xmax-xmin)*img_scale + xmin)
+        #ymax = int((ymax-ymin)*img_scale + ymin)
+
         img_ = imgs[:,ymin:ymax, xmin:xmax,:]
-        img_ = create_batch(img_)
         img_ = img_.reshape(img_.shape[0]*img_.shape[1]*img_.shape[2],3)
         conn.send([img_, row["class"]])
         print("preprocessed: ", row["filename"])
@@ -103,7 +98,7 @@ if __name__ == '__main__':
     #t = mp.Process(target=preprocess, args=(r"C:\Users\Emily\Documents\Bachelor\convertet_png",
     #                                        r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
     t = mp.Process(target=preprocess, args=("/home/phoenix/Documents/ImageSeg-Kurs/Drohnenbilder_convertet/",
-                                            "out.csv", 5, parent_conn,))
+                                            "out_1.csv", 5, parent_conn,))
     t.start()
     # t2 = mp.Process(target=print_rgb, args=(child_conn,))
     t2 = mp.Process(target=pcn, args=(child_conn,))
