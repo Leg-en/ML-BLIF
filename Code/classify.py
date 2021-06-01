@@ -4,12 +4,14 @@ import cv2
 from joblib import load
 from sklearn.neural_network import MLPClassifier
 from joblib import Parallel, delayed
+from PIL import Image
 
 
 clf = load('filename.joblib')
 
-ksize = 5
-img = cv2.imread('../../Drohnenbilder_convertet/DJI_0001.png')
+ksize = 3
+img = cv2.imread('../../Drohnenbilder_convertet/DJI_0007.png')
+img = cv2.resize(img, (int(1000), int(1000)))
 img_width = img.shape[1]
 img_height = img.shape[0]
 
@@ -32,7 +34,7 @@ def buildIMGS(kernels, img):
 
 
 def predict_row(row_data, row):
-    predict_image = np.empty((img_width, 1, 3))
+    predict_image = np.empty((img_width, 3))
     for x in range(img_width):
         rgb = row_data[x].reshape(1,-1)
         prediction_string = clf.predict(rgb)
@@ -40,20 +42,17 @@ def predict_row(row_data, row):
         if prediction_string == 'Wasser':
             prediction_rgb = (0, 0, 255)
         elif prediction_string == 'Himmel':
-            prediction_rgb = (255, 0, 255)
+            prediction_rgb = (255, 255, 255)
         elif prediction_string == 'Strand':
             prediction_rgb = (0, 255, 0)
         else:
             prediction_rgb = (255, 255, 0)
-
         predict_image[x] = prediction_rgb
-        return predict_image
+    return predict_image
 
-results = Parallel(n_jobs=-1)(
-    delayed(predict_row)(img[row, :], row)
-    for row in range(img_height))
+results = Parallel(n_jobs=8,verbose=100)(delayed(predict_row)(img[row, :], row) for row in range(img_height))
 
-results = np.asarray(results)[:, :, -1]
-resized = cv2.resize(results, (int(img_width/4), int(img_height/4)), interpolation=cv2.INTER_CUBIC)
-cv2.imshow('frame', resized)
-cv2.waitKey(5000)
+
+results = np.asarray(results)
+print(results.shape)
+cv2.imwrite('file.png', results)

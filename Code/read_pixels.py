@@ -88,7 +88,7 @@ if __name__ == '__main__':
     #t = mp.Process(target=preprocess, args=(r"C:\Users\Emily\Documents\Bachelor\convertet_png",
     #                                        r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
     t = mp.Process(target=preprocess, args=("/home/phoenix/Documents/ImageSeg-Kurs/Drohnenbilder_convertet/",
-                                            "out.csv", 3, parent_conn,))
+                                            "out.csv", 5, parent_conn,))
     t.start()
     # t2 = mp.Process(target=print_rgb, args=(child_conn,))
     t2 = mp.Process(target=pcn, args=(child_conn,))
