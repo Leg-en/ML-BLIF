@@ -89,6 +89,10 @@ def pcn(conn):
             dump(clf, 'filename.joblib')
             print("PCN Trained and Saved")
             return
+        except KeyboardInterrupt:
+            dump(clf, 'filename.joblib')
+            print("PCN Trained and Saved")
+            return
 
 
 if __name__ == '__main__':
