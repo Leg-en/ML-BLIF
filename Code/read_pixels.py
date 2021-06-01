@@ -42,6 +42,7 @@ def preprocess(Image: str, csv, ksize, conn) -> None:
         img_ = img_.reshape(img_.shape[0]*img_.shape[1]*img_.shape[2],3)
         conn.send([img_, row["class"]])
         print("preprocessed: ", row["filename"])
+    conn.send(["Finished"])
     conn.close()
     print("Image Processing Finished")
     return
@@ -64,11 +65,16 @@ def pcn(conn):
     while True:
         try:
             x = conn.recv()
-            data = x[0]
-            y = np.chararray(len(data), itemsize=10, unicode=True)
-            y[:] = x[1]
-            clf.partial_fit(data, y, classes=["Wasser", "Strand", "Himmel"])
-            print("Train iteration complete")
+            if str(x[0]) == "Finished":
+                dump(clf, 'filename.joblib')
+                print("PCN Trained and Saved")
+                return
+            else:
+                data = x[0]
+                y = np.chararray(len(data), itemsize=10, unicode=True)
+                y[:] = x[1]
+                clf.partial_fit(data, y, classes=["Wasser", "Strand", "Himmel"])
+                print("Train iteration complete")
         except EOFError:
             dump(clf, 'filename.joblib')
             print("PCN Trained and Saved")
@@ -79,8 +85,10 @@ if __name__ == '__main__':
     parent_conn, child_conn = mp.Pipe()
     #t = mp.Process(target=preprocess, args=(r'/home/pi/Desktop/convertet_png',
     #                                        r"/home/pi/Desktop/out.csv", 5, parent_conn,))
-    t = mp.Process(target=preprocess, args=(r"C:\Users\Emily\Documents\Bachelor\convertet_png",
-                                            r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
+    #t = mp.Process(target=preprocess, args=(r"C:\Users\Emily\Documents\Bachelor\convertet_png",
+    #                                        r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
+    t = mp.Process(target=preprocess, args=("/home/phoenix/Documents/ImageSeg-Kurs/Drohnenbilder_convertet/",
+                                            "out.csv", 3, parent_conn,))
     t.start()
     # t2 = mp.Process(target=print_rgb, args=(child_conn,))
     t2 = mp.Process(target=pcn, args=(child_conn,))
