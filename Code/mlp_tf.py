@@ -64,9 +64,9 @@ def preprocess(Image: str, csv, ksize,epochs) -> None:
                 elif row["class"] == "Strand":
                     y = 1
                 elif row["class"] == "Himmel":
-                    y = 3
+                    y = 2
                 else:
-                    y = 4
+                    y = 3
                 Y[:] = y
                 yield (i, Y)
 
@@ -84,8 +84,8 @@ def divCheck(shape, div_base=100):
 
 def pcn(Image: str, csv, ksize, epochs):
     model = Sequential()
-    model.add(Dense(10,activation='relu'))
-    model.add(Dense(4, activation="softmax"))
+    model.add(Dense(10,activation='relu', input_shape=(3,)))
+    model.add(Dense(3, activation="softmax"))
     opt = Adam()
     model.compile(optimizer=opt, loss='sparse_categorical_crossentropy')
     gen = preprocess(Image, csv, ksize, epochs)
