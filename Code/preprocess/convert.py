@@ -1,6 +1,6 @@
 import os
-path = r"C:\Users\Emily\Documents\Bachelor\Jens_Drohnenbilder"
-output = r"C:\Users\Emily\Documents\Bachelor\convertet_png"
+path = r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\DNG"
+output = r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\PNG"
 #path = "/home/phoenix/Documents/ImageSeg-Kurs/Drohnenbilder/"
 #output = "/home/phoenix/Documents/ImageSeg-Kurs/Drohnenbilder_convertet/"
 for i in os.listdir(path):
