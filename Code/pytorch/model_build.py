@@ -1,19 +1,5 @@
-import os
-import pandas as pd
-from torchvision.io import read_image
-import torch
-from torch.utils.data import Dataset, DataLoader
-from torchvision.transforms import ToTensor
-import torch.optim as optim
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-import torch.utils.data as data
-import torchvision.transforms as transforms
-import torchvision.datasets as datasets
-import matplotlib.pyplot as plt
-import numpy as np
 
 import load_data
 
@@ -36,8 +22,8 @@ class NeuralNetwork(nn.Module):
             nn.ReLU(),
             nn.Linear(10, 4, bias=True)
         )
-        self.conv = nn.Sequential(# Das müsste in etwa unsere idee mit dem 5 kernel abbilden?
-            nn.Conv2d(in_channels=3,out_channels=10,kernel_size=5),
+        self.conv = nn.Sequential(  # Das müsste in etwa unsere idee mit dem 5 kernel abbilden?
+            nn.Conv2d(in_channels=3, out_channels=10, kernel_size=5),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=5),
             nn.Flatten()
@@ -51,9 +37,9 @@ class NeuralNetwork(nn.Module):
         )
 
     def forward(self, x):
-        #logits = self.layers(x)
+        # logits = self.layers(x)
         x = self.conv(x)
-        #print(x)
+        # print(x)
         logits = self.conv2(x)
         return logits
 
