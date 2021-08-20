@@ -43,7 +43,7 @@ class CustomImageDataset(Dataset):
         image = image.crop((xmin, ymin, xmax, ymax))
         image = image.resize((self.size, self.size))
         # Todo: Image to tensor
-        image = transforms.ToTensor()(image).unsqueeze(0)
+        image = transforms.ToTensor()(image)
         label = self.img_labels.iloc[idx, 3]
         if label == "Himmel":
             label = 0
@@ -52,19 +52,15 @@ class CustomImageDataset(Dataset):
         elif label == "Wasser":
             label = 3
         label = torch.tensor(label)
-        if self.transform:
-            image = self.transform(image)
-        if self.target_transform:
-            label = self.target_transform(label)
         return image, label
 
 
 def buildLoaders(annotations_file=r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\preprocess\out.csv",
-                 img_dir=r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\PNG", size=28, color="rgb"):
+                 img_dir=r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\PNG", size=28, color="rgb", batch_size=64):
     training_data = CustomImageDataset(annotations_file=annotations_file, img_dir=img_dir, size=size, color=color)
     train_data, test_data = torch.utils.data.random_split(training_data, [350, 98])
-    train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
-    test_loader = DataLoader(test_data, batch_size=64, shuffle=True)
+    train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=True)
     return train_loader, test_loader
 
 

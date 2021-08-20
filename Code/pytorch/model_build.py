@@ -1,17 +1,10 @@
 import os
 import pandas as pd
 from torchvision.io import read_image
-from torch.utils.data import DataLoader
 import torch
-from torch.utils.data import Dataset
-from torchvision import datasets
+from torch.utils.data import Dataset, DataLoader
 from torchvision.transforms import ToTensor
-from torch import nn
-import matplotlib.pyplot as plt
-import numpy as np
-import cv2
 import torch.optim as optim
-import time
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -21,13 +14,11 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import matplotlib.pyplot as plt
 import numpy as np
-import copy
-import random
-import time
 
 import load_data
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = "cpu"
 print('Using {} device'.format(device))
 
 INPUT_DIM = 256 * 256 * 3
@@ -37,24 +28,33 @@ OUTPUT_DIM = 3
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork, self).__init__()
-        self.flatten = nn.Flatten()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(28 * 28, 512),
-            nn.ReLU(),
-            nn.Linear(512, 512),
-            nn.ReLU(),
-            nn.Linear(512, 10),
-        )
         self.layers = nn.Sequential(
-            nn.Linear(3000000, 192),
+            nn.Flatten(),
+            nn.Linear(1000 * 1000 * 3, 100, bias=True),
             nn.ReLU(),
-            nn.Linear(192, 10)
+            nn.Linear(100, 10, bias=True),
+            nn.ReLU(),
+            nn.Linear(10, 4, bias=True)
+        )
+        self.conv = nn.Sequential(# Das müsste in etwa unsere idee mit dem 5 kernel abbilden?
+            nn.Conv2d(in_channels=3,out_channels=10,kernel_size=5),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=5),
+            nn.Flatten()
+        )
+        self.conv2 = nn.Sequential(
+            nn.Linear(396010, 100, bias=True),
+            nn.ReLU(),
+            nn.Linear(100, 10, bias=True),
+            nn.ReLU(),
+            nn.Linear(10, 4, bias=True)
         )
 
     def forward(self, x):
-        x = self.flatten(x)
-        # logits = self.linear_relu_stack(x)
-        logits = self.layers(x)
+        #logits = self.layers(x)
+        x = self.conv(x)
+        #print(x)
+        logits = self.conv2(x)
         return logits
 
 
@@ -62,12 +62,12 @@ def main():
     train_dataloader, test_dataloader = load_data.buildLoaders(
         annotations_file=r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\preprocess\out.csv",
         img_dir=r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\PNG", size=1000,
-        color="rgb")  # Wenn color = grayscale ist funktioniert es schon
-    model = NeuralNetwork()
+        color="rgb", batch_size=64)  # Wenn color = grayscale ist funktioniert es schon
+    model = NeuralNetwork().to(device)
     learning_rate = 1e-3
     # Initialize the loss function
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     epochs = 10
     for t in range(epochs):
         print(f"Epoch {t + 1}\n-------------------------------")
