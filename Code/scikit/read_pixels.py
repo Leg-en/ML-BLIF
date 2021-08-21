@@ -98,13 +98,13 @@ def pcn(conn):
 if __name__ == '__main__':
     parent_conn, child_conn = mp.Pipe()
     #t = mp.Process(target=preprocess, args=(r'/home/pi/Desktop/convertet_png',
-    #                                        r"/home/pi/Desktop/out.csv", 5, parent_conn,))
+    #                                        r"/home/pi/Desktop/image_data.csv", 5, parent_conn,))
     #t = mp.Process(target=preprocess, args=(r"C:\Users\Emily\Documents\Bachelor\convertet_png",
-    #                                        r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5, parent_conn,))
+    #                                        r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\image_data.csv", 5, parent_conn,))
     #t = mp.Process(target=preprocess, args=("/home/phoenix/Documents/ImageSeg-Kurs/Drohnenbilder_convertet/",
     #                                        "out_1.csv", 5, parent_conn,))
     #t = mp.Process(target=preprocess, args=(r"/home/azureuser/Bachelor/convertet_png/",
-                                            r"/home/azureuser/Bachelor/Code/out.csv", 5, parent_conn,))
+                                            r"/home/azureuser/Bachelor/Code/image_data.csv", 5, parent_conn,))
     t.start()
     # t2 = mp.Process(target=print_rgb, args=(child_conn,))
     t2 = mp.Process(target=pcn, args=(child_conn,))

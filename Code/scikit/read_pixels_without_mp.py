@@ -77,6 +77,6 @@ def pcn(Image: str, csv, ksize):
 
 
 if __name__ == '__main__':
-    #pcn(r"C:\Users\Emily\Documents\Bachelor\convertet_png", r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5)
-    pcn(r"./datasets", r"out.csv", 5)
+    #pcn(r"C:\Users\Emily\Documents\Bachelor\convertet_png", r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\image_data.csv", 5)
+    pcn(r"./datasets", r"image_data.csv", 5)
     print("Complete")

@@ -12,7 +12,13 @@ OUTPUT_DIM = 3
 
 
 class NeuralNetwork(nn.Module):
+    """
+    Neurale Network Klasse entsprechend Pytorch. Erbt von nn.module
+    """
     def __init__(self):
+        """
+        Init methode für die klasse. Hier werden verschiedene Layer für das Netzwerk gebaut
+        """
         super(NeuralNetwork, self).__init__()
         self.layers = nn.Sequential(
             nn.Flatten(),
@@ -37,6 +43,11 @@ class NeuralNetwork(nn.Module):
         )
 
     def forward(self, x):
+        """
+        Forward methode entsprechend pytorch. Hier entsteht das eigentliche Model
+        :param x:
+        :return:
+        """
         # logits = self.layers(x)
         x = self.conv(x)
         # print(x)
@@ -45,8 +56,12 @@ class NeuralNetwork(nn.Module):
 
 
 def main():
+    """
+    Main methode. Hier werden die Data loader abgerufen, das Neurale netzwerk auf das Device transferiert. Als Loss Function wird CrossEntropyLoss gewählt und also
+    optimizer Adam mit einer Learning rate von 1*10^-3. Schließlich wird für eine gegebene epoch zahl jedes mal eine Trainings und Test loop ausgeführt.
+    """
     train_dataloader, test_dataloader = load_data.buildLoaders(
-        annotations_file=r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\preprocess\out.csv",
+        annotations_file=r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Artefakte\image_data.csv",
         img_dir=r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\PNG", size=1000,
         color="rgb", batch_size=64)  # Wenn color = grayscale ist funktioniert es schon
     model = NeuralNetwork().to(device)
@@ -60,10 +75,18 @@ def main():
         train_loop(train_dataloader, model, loss_fn, optimizer)
         test_loop(test_dataloader, model, loss_fn)
     print("Done!")
-    torch.save(model, 'model.pth')
+    torch.save(model, '../../Artefakte/modelle/model.pth')
 
 
 def train_loop(dataloader, model, loss_fn, optimizer):
+    """
+    Code stammt aus der Tutorial seite von Pytorch: https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html
+    Iteriert über das datenset und Konvergiert zu Optimalen Parametern
+    :param dataloader: Data Loader für die Trainings daten
+    :param model: Das eigentliche mdel
+    :param loss_fn: Die vordefinierte Loss function
+    :param optimizer Den Vordefinierten Optimizer
+    """
     size = len(dataloader.dataset)
     for batch, (X, y) in enumerate(dataloader):
         # Compute prediction and loss
@@ -81,6 +104,13 @@ def train_loop(dataloader, model, loss_fn, optimizer):
 
 
 def test_loop(dataloader, model, loss_fn):
+    """
+    Code stammt aus der Tutorial seite von Pytorch: https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html
+    Iteriert über das Datenset um die model Performance zu bewerten
+    :param dataloader: Data Loader für die Test daten
+    :param model: Das eigentliche Model
+    :param loss_fn: Die vordefinierte Loss function
+    """
     size = len(dataloader.dataset)
     num_batches = len(dataloader)
     test_loss, correct = 0, 0

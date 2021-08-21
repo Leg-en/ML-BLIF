@@ -32,7 +32,7 @@ for item in os.listdir(input):
 #print(data_array)
 
 
-with open("out.csv", "w", newline='') as csvfile:
+with open("../../Artefakte/image_data.csv", "w", newline='') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=["file","x_min", "y_min","x_max","y_max","type"])
     writer.writeheader()
     for i in data_array:

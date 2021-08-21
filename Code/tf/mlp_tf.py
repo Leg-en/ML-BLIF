@@ -137,4 +137,4 @@ def pcn(Image: str, csv, ksize, epochs):
 
 if __name__ == '__main__':
     pcn(r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\PNG", r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\preprocess\out.csv", 5, 10)
-    #pcn(r"/home/azureuser/Bachelor/convertet_png/", "/home/azureuser/Bachelor/Code/out.csv", 5, 10)
+    #pcn(r"/home/azureuser/Bachelor/convertet_png/", "/home/azureuser/Bachelor/Code/image_data.csv", 5, 10)

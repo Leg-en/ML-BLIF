@@ -59,9 +59,9 @@ def pcn(Image: str, csv, ksize):
 
 
 if __name__ == '__main__':
-    #pcn(r"Users/marius100100/datasets", r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\out.csv", 5)
+    #pcn(r"Users/marius100100/datasets", r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\image_data.csv", 5)
     with open(os.path.join(sys.argv[2], "test.txt"), "w") as file:
         file.write("ABC")
     datasets = sys.argv[1]
-    pcn(datasets, r"out.csv", 5)
+    pcn(datasets, r"image_data.csv", 5)
     print("Complete")
