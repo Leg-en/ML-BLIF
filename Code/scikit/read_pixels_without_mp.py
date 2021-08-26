@@ -66,7 +66,7 @@ def print_rgb(conn):
 
 
 def pcn(Image: str, csv, ksize):
-    clf = MLPClassifier(solver='adam', alpha=1e-5, hidden_layer_sizes=(10), random_state=1)
+    clf = MLPClassifier(solver='adam', alpha=1e-5, hidden_layer_sizes=(5,3), random_state=1)
     gen = preprocess(Image, csv, ksize)
     for i in gen:
         X = i[0]
@@ -77,6 +77,6 @@ def pcn(Image: str, csv, ksize):
 
 
 if __name__ == '__main__':
-    #pcn(r"C:\Users\Emily\Documents\Bachelor\convertet_png", r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\image_data.csv", 5)
-    pcn(r"./datasets", r"image_data.csv", 5)
+    pcn(r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\PNG", r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Artefakte\image_data.csv", 5)
+    #pcn(r"./datasets", r"image_data.csv", 5)
     print("Complete")

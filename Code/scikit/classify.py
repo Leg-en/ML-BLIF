@@ -7,7 +7,7 @@ from joblib import Parallel, delayed
 from PIL import Image
 
 
-clf = load(r'C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\modelle\filename.joblib')
+clf = load(r'C:\Users\Emily\Documents\GitHub\ML-BLIF\Artefakte\modelle\filename2.joblib')
 img = cv2.imread(r'C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\PNG\DJI_0092.png')
 
 

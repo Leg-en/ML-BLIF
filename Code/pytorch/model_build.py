@@ -37,6 +37,14 @@ class NeuralNetwork(nn.Module):
         self.conv2 = nn.Sequential(
             nn.Linear(396010, 100, bias=True),
             nn.ReLU(),
+            nn.Linear(100, 100, bias=True),
+            nn.ReLU(),
+            nn.Linear(100, 100, bias=True),
+            nn.ReLU(),
+            nn.Linear(100, 100, bias=True),
+            nn.ReLU(),
+            nn.Linear(100, 100, bias=True),
+            nn.ReLU(),
             nn.Linear(100, 10, bias=True),
             nn.ReLU(),
             nn.Linear(10, 4, bias=True)
