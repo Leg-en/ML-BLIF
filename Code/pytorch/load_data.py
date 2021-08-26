@@ -54,7 +54,7 @@ class CustomImageDataset(Dataset):
         elif label == "Strand":
             label = 1
         elif label == "Wasser":
-            label = 3
+            label = 2
         label = torch.tensor(label)
         return image, label
 
