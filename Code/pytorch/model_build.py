@@ -1,10 +1,8 @@
 import torch
 import torch.nn as nn
-
 import load_data
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-device = "cpu"
 print('Using {} device'.format(device))
 
 INPUT_DIM = 256 * 256 * 3
