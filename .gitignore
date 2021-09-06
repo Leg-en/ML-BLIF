@@ -132,3 +132,8 @@ dmypy.json
 .idea/ML-BLIF.iml
 .idea/modules.xml
 .idea/vcs.xml
+*.pth
+*.pth
+Artefakte/modelle/simple_mlp.pth
+*.pth
+*.pth
