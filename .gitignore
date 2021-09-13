@@ -137,3 +137,7 @@ dmypy.json
 Artefakte/modelle/simple_mlp.pth
 *.pth
 *.pth
+*.pth
+Artefakte/modelle/model.pth
+*.pth
+Artefakte/modelle/model.pth
