@@ -133,6 +133,6 @@ dmypy.json
 .idea/modules.xml
 .idea/vcs.xml
 *.pth
-Artefakte/modelle/simple_mlp.pth
-/Artefakte/modelle/
-*.pth
+*.joblib
+/Artefakte/modelle/*
+
