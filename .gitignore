@@ -133,13 +133,6 @@ dmypy.json
 .idea/modules.xml
 .idea/vcs.xml
 *.pth
-*.pth
 Artefakte/modelle/simple_mlp.pth
-*.pth
-*.pth
-*.pth
-Artefakte/modelle/model.pth
-*.pth
-Artefakte/modelle/model.pth
 /Artefakte/modelle/
 *.pth
