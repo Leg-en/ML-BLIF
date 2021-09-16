@@ -141,3 +141,5 @@ Artefakte/modelle/simple_mlp.pth
 Artefakte/modelle/model.pth
 *.pth
 Artefakte/modelle/model.pth
+/Artefakte/modelle/
+*.pth
