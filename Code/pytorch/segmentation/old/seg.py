@@ -1,5 +1,4 @@
 import segmentation_models_pytorch as smp
-import load_data
 import torch
 import torch.nn as nn
 import load_data
