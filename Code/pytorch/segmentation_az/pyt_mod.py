@@ -1,41 +1,70 @@
 import os
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset as BaseDataset
-import numpy as np
 import cv2
-import matplotlib.pyplot as plt
 import albumentations as albu
-import gc
-import torch
 import numpy as np
 import segmentation_models_pytorch as smp
 import torch
-import torch.nn as nn
 from catalyst.dl import SupervisedRunner
+import argparse
+from azureml.core import Run
+run = Run.get_context()
+
+
+
 #https://colab.research.google.com/gist/Scitator/e3fd90eec05162e16b476de832500576/cars-segmentation-camvid.ipynb#scrollTo=AAQdydOw7A8n
-DATA_DIR = "/home/emily/Schreibtisch/BA/PNG/splitted"
 
-x_train_dir = os.path.join(DATA_DIR, 'train', "img")
-y_train_dir = os.path.join(DATA_DIR, 'train', "mask")
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--x_train_dir',
+    type=str,
+    help='Path to the training data'
+)
+parser.add_argument(
+    '--y_train_dir',
+    type=str,
+    help='Path for the output'
+)
+parser.add_argument(
+    '--x_valid_dir',
+    type=str,
+    help='Path for the output'
+)
+parser.add_argument(
+    '--y_valid_dir',
+    type=str,
+    help='Path for the output'
+)
+parser.add_argument(
+    '--output_path',
+    type=str,
+    help='Path for the output'
+)
 
-x_valid_dir = os.path.join(DATA_DIR, 'valid', "img")
-y_valid_dir = os.path.join(DATA_DIR, 'valid', "mask")
+args = parser.parse_args()
 
-x_test_dir = os.path.join(DATA_DIR, 'test', "img")
-y_test_dir = os.path.join(DATA_DIR, 'test', "mask")
 
-# helper function for data visualization
-def visualize(**images):
-    """PLot images in one row."""
-    n = len(images)
-    plt.figure(figsize=(16, 5))
-    for i, (name, image) in enumerate(images.items()):
-        plt.subplot(1, n, i + 1)
-        plt.xticks([])
-        plt.yticks([])
-        plt.title(' '.join(name.split('_')).title())
-        plt.imshow(image)
-    plt.show()
+logdir = args.output_path
+
+x_train_dir = args.x_train_dir
+y_train_dir = args.y_train_dir
+
+x_valid_dir = args.x_valid_dir
+y_valid_dir = args.y_valid_dir
+
+print("===== DATA =====")
+print("x_train_dir PATH: " + x_train_dir)
+print("y_train_dir PATH: " + y_train_dir)
+print("x_valid_dir PATH: " + x_valid_dir)
+print("y_valid_dir PATH: " + y_valid_dir)
+print("LIST FILES IN DATA PATH...")
+print(os.listdir(x_train_dir))
+print("================")
+
+#x_test_dir = os.path.join(DATA_DIR, 'test', "img")
+#y_test_dir = os.path.join(DATA_DIR, 'test', "mask")
+
 
 class Dataset(BaseDataset):
     """CamVid Dataset. Read images, apply augmentation and preprocessing transformations.
@@ -198,7 +227,9 @@ ENCODER = 'se_resnext50_32x4d'
 ENCODER_WEIGHTS = 'imagenet'
 CLASSES = ["himmel"]
 ACTIVATION = 'sigmoid' # could be None for logits or 'softmax2d' for multiclass segmentation
-DEVICE = 'cpu'
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if device == "cpu":
+    raise ValueError
 
 model = smp.Unet(
     encoder_name=ENCODER,
@@ -231,7 +262,6 @@ train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
 valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False)
 
 num_epochs = 10  # change me
-logdir = "./logs/segmentation_notebook"
 loaders = {
     "train": train_loader,
     "valid": valid_loader
