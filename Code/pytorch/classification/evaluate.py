@@ -22,38 +22,34 @@ def load(path):
 def buildLoaders(annotations_file=r"C:\Users\Emily\Documents\Bachelor_Artefakte\image_data.csv",
                  img_dir=r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\PNG", size=img_size, color="rgb", ):
     training_data = load_data.CustomImageDataset(annotations_file=annotations_file, img_dir=img_dir, size=size, color=color)
-    loader = DataLoader(training_data, batch_size=2, shuffle=True)
+    loader = DataLoader(training_data, batch_size=1, shuffle=True)
     return loader
 
 def predict(model, image):
-    output = model(image)
-    prediction = torch.max(output.data, 1)[1].numpy()
-    print(prediction)
-    prediction = max(prediction)
-    if prediction == 0:
-        print("Himmel")
-    elif prediction == 1:
-        print("Strand")
-    elif prediction == 2:
-        print("Wasser")
-    else:
-        print("Sonstiges")
+    with torch.no_grad():
+        res = model(image)
+    prediction = np.argmax(res)
+    prediction = prediction.item()
+    return prediction
 
-def show(label, image):
-    print(label)
-    img = image[0].squeeze()
-    img = np.array(img)
-    img = img.reshape((img_size,img_size,3))
-    plt.imshow(img)
-    plt.show()
 
 def main():
     global path
     model = load(path)
     loader = buildLoaders()
-    feature, label = next(iter(loader))
-    show(label,feature)
-    predict(model,feature)
+    l = len(loader)
+    c = 0
+    for idx,(img,label) in enumerate(loader):
+        print(f"Iteration: {idx} von: {l}")
+        prediction = predict(model,img)
+        lab = label[0].item()
+        if prediction == lab:
+            c += 1
+    print(f"Getroffene = {c}")
+    print(f"Laenge = {l}")
+    print(f"Treffer in prozent: {(c/l)*100}")
+
+
 
 
 

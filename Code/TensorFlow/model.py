@@ -1,9 +1,9 @@
 import tensorflow as tf
-
+import os
 def load_data(data_dir):
     batch_size = 32
-    img_height = 1000
-    img_width = 1000
+    img_height = 3000
+    img_width = 4000
     train_ds = tf.keras.preprocessing.image_dataset_from_directory(
         data_dir,
         validation_split=0.2,
