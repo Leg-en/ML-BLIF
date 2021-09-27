@@ -13,6 +13,11 @@ img_scale = 0.25
 
 #@jit
 def buildKernels(ksize):
+    """
+    Baut ein Kernel welches mit 0 gefüllt ist
+    :param ksize: Die Kernelsize
+    :return: Eine liste mit Kernels
+    """
     kernels = []
     for i in range(ksize * ksize):
         x = np.zeros((ksize, ksize))
@@ -23,6 +28,12 @@ def buildKernels(ksize):
 
 #@jit(parallel=True)
 def buildIMGS(kernels, img):
+    """
+    Nimmt ein Bild und wendet das Kernel darauf an.
+    :param kernels:
+    :param img:
+    :return:
+    """
     images = []
     for kernel in kernels:
         cv_filter = cv2.filter2D(img, -1, kernel)
@@ -31,6 +42,14 @@ def buildIMGS(kernels, img):
 
 
 def preprocess(Image: str, csv, ksize, conn) -> None:
+    """
+    Präprozessiert das Image und übergibt es an den Thread mit dem perzeptron
+    :param Image: Pfad zu den bildern
+    :param csv: Pfad zu der CSV Datei
+    :param ksize: Kernel Size
+    :param conn: Die connection pipe zu dem anderen Thread
+    :return:
+    """
     print("Processing Started")
     frame = pandas.read_csv(csv)
     kernels = buildKernels(ksize)
@@ -58,18 +77,14 @@ def preprocess(Image: str, csv, ksize, conn) -> None:
     return
 
 
-def print_rgb(conn):
-    with open("test.csv", "w", newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        while True:
-            try:
-                x = conn.recv()
-                writer.writerow(x)
-            except EOFError:
-                return
 
 
 def pcn(conn):
+    """
+    Hier wird das MLP Trainiert und am ende gespeichert.
+    :param conn: Connection pipe zu dem anderen Thread
+    :return:
+    """
     clf = MLPClassifier(solver='adam', alpha=1e-5, hidden_layer_sizes=(10), random_state=1)
     print("PCN Training started")
     while True:
@@ -97,16 +112,9 @@ def pcn(conn):
 
 if __name__ == '__main__':
     parent_conn, child_conn = mp.Pipe()
-    #t = mp.Process(target=preprocess, args=(r'/home/pi/Desktop/convertet_png',
-    #                                        r"/home/pi/Desktop/image_data.csv", 5, parent_conn,))
-    #t = mp.Process(target=preprocess, args=(r"C:\Users\Emily\Documents\Bachelor\convertet_png",
-    #                                        r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\image_data.csv", 5, parent_conn,))
-    #t = mp.Process(target=preprocess, args=("/home/phoenix/Documents/ImageSeg-Kurs/Drohnenbilder_convertet/",
-    #                                        "out_1.csv", 5, parent_conn,))
-    #t = mp.Process(target=preprocess, args=(r"/home/azureuser/Bachelor/convertet_png/",
-                                            r"/home/azureuser/Bachelor/Code/image_data.csv", 5, parent_conn,))
+    t = mp.Process(target=preprocess, args=(r'/home/pi/Desktop/convertet_png',
+                                            r"/home/pi/Desktop/image_data.csv", 5, parent_conn,))
     t.start()
-    # t2 = mp.Process(target=print_rgb, args=(child_conn,))
     t2 = mp.Process(target=pcn, args=(child_conn,))
     t2.start()
     t.join()

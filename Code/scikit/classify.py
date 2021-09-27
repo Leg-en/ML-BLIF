@@ -1,3 +1,7 @@
+"""
+Lädt ein Scikit Learn Model und macht eine Klassifikation
+"""
+
 from joblib import dump
 import numpy as np
 import cv2

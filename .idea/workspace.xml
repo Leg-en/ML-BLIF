@@ -4,7 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13b4605c-ca7b-457b-a82a-dadb4de894ed" name="Changes" comment="validation und visualisierung hinzugefügt" />
+    <list default="true" id="13b4605c-ca7b-457b-a82a-dadb4de894ed" name="Changes" comment="validation und visualisierung hinzugefügt">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/Azure Model/az_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/preprocess/convert.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/preprocess/convert.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/preprocess/parse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/preprocess/parse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/pytorch/classifcation_az/dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/classifcation_az/dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/pytorch/classifcation_az/pytorch_run_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/classifcation_az/pytorch_run_file.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/pytorch/classification/evaluate.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/classification/evaluate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/pytorch/classification/load_classify.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/classification/load_classify.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/pytorch/segmentation/pyt_mod.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/segmentation/pyt_mod.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/pytorch/segmentation_az/pyt_mod.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/segmentation_az/pyt_mod.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/pytorch/segmentation_az/pytorch_run_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/segmentation_az/pytorch_run_file.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/scikit/classify.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/scikit/classify.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/scikit/read_pixels.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/scikit/read_pixels.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/scikit/read_pixels_without_mp.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/scikit/read_pixels_without_mp.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -261,6 +276,8 @@
       <workItem from="1632065810473" duration="9967000" />
       <workItem from="1632133142327" duration="3212000" />
       <workItem from="1632226170579" duration="110000" />
+      <workItem from="1632339084596" duration="6000" />
+      <workItem from="1632750157285" duration="2285000" />
     </task>
     <task id="LOCAL-00001" summary="validation und visualisierung hinzugefügt">
       <created>1632141573670</created>

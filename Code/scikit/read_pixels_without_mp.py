@@ -13,6 +13,11 @@ img_scale = 0.25
 
 # @jit
 def buildKernels(ksize):
+    """
+        Baut ein Kernel welches mit 0 gefüllt ist
+        :param ksize: Die Kernelsize
+        :return: Eine liste mit Kernels
+        """
     kernels = []
     for i in range(ksize * ksize):
         x = np.zeros((ksize, ksize))
@@ -23,6 +28,12 @@ def buildKernels(ksize):
 
 # @jit(parallel=True)
 def buildIMGS(kernels, img):
+    """
+        Nimmt ein Bild und wendet das Kernel darauf an.
+        :param kernels:
+        :param img:
+        :return:
+        """
     images = []
     for kernel in kernels:
         cv_filter = cv2.filter2D(img, -1, kernel)
@@ -31,6 +42,13 @@ def buildIMGS(kernels, img):
 
 
 def preprocess(Image: str, csv, ksize) -> None:
+    """
+        Python Generator der der die Bilder mit den entsprechenden Kernels als np nd array yielded
+        :param Image: Pfad zu den bildern
+        :param csv: Pfad zu der CSV Datei
+        :param ksize: Kernel Size
+        :yields: np nd arrays mit den bildern
+        """
     print("Processing Started")
     frame = pandas.read_csv(csv)
     kernels = buildKernels(ksize)
@@ -54,18 +72,16 @@ def preprocess(Image: str, csv, ksize) -> None:
         yield [img_, row["class"]]
 
 
-def print_rgb(conn):
-    with open("test.csv", "w", newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        while True:
-            try:
-                x = conn.recv()
-                writer.writerow(x)
-            except EOFError:
-                return
 
 
 def pcn(Image: str, csv, ksize):
+    """
+    Hier wird das modell Trainiert und gespeichert
+    :param Image: Bildpfad
+    :param csv: Csvpfad
+    :param ksize: Kernelsize
+    :return:
+    """
     clf = MLPClassifier(solver='adam', alpha=1e-5, hidden_layer_sizes=(5,3), random_state=1)
     gen = preprocess(Image, csv, ksize)
     for i in gen:

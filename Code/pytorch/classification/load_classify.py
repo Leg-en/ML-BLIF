@@ -1,3 +1,7 @@
+"""
+Dieses Skript macht eine Beispielhafte Prediction für ein Bild
+"""
+
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
@@ -8,12 +12,17 @@ mpl.use('Qt5Agg')
 
 import load_data
 
-path = r"C:\Users\Emily\Documents\Bachelor_Artefakte\modelle\model.pth"
+path = r"C:\Users\Emily\Documents\Bachelor_Artefakte\modelle\model.pth" #Input Pfad zu dem Modell
 image_idx = 0
 img_size = 1000
 
 
 def load(path):
+    """
+        Lädt das model ein.
+        :param path: Pfad z udem model
+        :return: Returnt das eingelesene PyTorch Model
+        """
     model = NeuralNetwork()
     model.load_state_dict(torch.load(path))
     model.eval()
@@ -21,11 +30,24 @@ def load(path):
 
 def buildLoaders(annotations_file=r"C:\Users\Emily\Documents\Bachelor_Artefakte\image_data.csv",
                  img_dir=r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\PNG", size=img_size, color="rgb", ):
+    """
+        Baut einen PyTorch dataloader.
+        :param annotations_file: Ein csv File welches aus filename, width, height, class, xmin, ymin, xmax, ymax besteht
+        :param img_dir: Pfad zu den PNG Files
+        :param size: Skalierungsfaktor für die Bilder
+        :param color: Farbraum der Bilder
+        :return: Returnt einen PyTorch DataLoader
+        """
     training_data = load_data.CustomImageDataset(annotations_file=annotations_file, img_dir=img_dir, size=size, color=color)
     loader = DataLoader(training_data, batch_size=2, shuffle=True)
     return loader
 
 def predict(model, image):
+    """
+        Macht mit gegebenem Model und Image eine Vorhersage und printet diese
+        :param model: PyTorch model
+        :param image: Bild Datei aus einem DataLoader
+        """
     output = model(image)
     prediction = torch.max(output.data, 1)[1].numpy()
     print(prediction)
@@ -40,6 +62,12 @@ def predict(model, image):
         print("Sonstiges")
 
 def show(label, image):
+    """
+    Visualisiert das Bild und gibt das label aus
+    :param label: Label des Bild ausschnittes
+    :param image: Bild
+    :return:
+    """
     print(label)
     img = image[0].squeeze()
     img = np.array(img)

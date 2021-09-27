@@ -1,3 +1,8 @@
+"""
+Dieses File ist ein Runnerfile für die Azurecloud. Es dient dazu das eigentliche ML Skript zu starten.
+"""
+
+
 from azureml.core import Workspace, Experiment, Environment, ScriptRunConfig, Dataset
 from azureml.data.output_dataset_config import OutputFileDatasetConfig
 

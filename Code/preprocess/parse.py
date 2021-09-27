@@ -1,8 +1,16 @@
+"""
+Diese Klasse dient dem Ziel, die XML Files mit den Label Informationen in ein JSON zu Formatieren, welches aus
+filename, width, height, class, xmin, ymin, xmax, ymax besteht.
+Als Input wird der Ordnerpfad zu den XMLs erwartet.
+Als output der Zielpfad.
+"""
+
+
 import xml.etree.ElementTree as ET
 import os
 import csv
-#Konvertiert die XMLs in ein reduziertes JSON
-input = r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Klassifizierung"
+
+input = r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Klassifizierung" #Input
 data_array = []
 for item in os.listdir(input):
     data = os.path.join(input, item)
@@ -32,7 +40,7 @@ for item in os.listdir(input):
 #print(data_array)
 
 
-with open("../../Artefakte/image_data.csv", "w", newline='') as csvfile:
+with open("../../Artefakte/image_data.csv", "w", newline='') as csvfile: #Output muss als csv typ gespeichert werden.
     writer = csv.DictWriter(csvfile, fieldnames=["file","x_min", "y_min","x_max","y_max","type"])
     writer.writeheader()
     for i in data_array:

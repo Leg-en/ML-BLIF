@@ -1,3 +1,4 @@
+#Dockerfile für die Azure Umgebung. Besteht größtenteils aus einem Vorkonfiguriertem File aus Azure, welches Angepasst wurde
 FROM mcr.microsoft.com/azureml/openmpi4.1.0-cuda11.1-cudnn8-ubuntu18.04:20210806.v1
 
 ENV AZUREML_CONDA_ENVIRONMENT_PATH /azureml-envs/pytorch-1.9

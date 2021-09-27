@@ -1,3 +1,9 @@
+"""
+Dieser Abschnitt ist teil des Aublickes. Entsprechend gibt es hier keine Weiteren Kommentare oder Verweise.
+Das Ziel hier war Bild Segmentierung
+"""
+
+
 import os
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset as BaseDataset
