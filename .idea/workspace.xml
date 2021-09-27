@@ -5,20 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="13b4605c-ca7b-457b-a82a-dadb4de894ed" name="Changes" comment="validation und visualisierung hinzugefügt">
+      <change afterPath="$PROJECT_DIR$/Code/pytorch/Segmentation_2/dataset.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Code/pytorch/Segmentation_2/model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Code/pytorch/Segmentation_2/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/Azure Model/az_model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/preprocess/convert.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/preprocess/convert.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/preprocess/parse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/preprocess/parse.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/pytorch/classifcation_az/dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/classifcation_az/dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/pytorch/classifcation_az/pytorch_run_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/classifcation_az/pytorch_run_file.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/pytorch/classification/evaluate.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/classification/evaluate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/pytorch/classification/load_classify.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/classification/load_classify.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/pytorch/segmentation/pyt_mod.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/segmentation/pyt_mod.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/pytorch/segmentation_az/pyt_mod.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/segmentation_az/pyt_mod.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/pytorch/segmentation_az/pytorch_run_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/pytorch/segmentation_az/pytorch_run_file.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/scikit/classify.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/scikit/classify.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/scikit/read_pixels.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/scikit/read_pixels.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/scikit/read_pixels_without_mp.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/scikit/read_pixels_without_mp.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +32,10 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Code/pytorch/Segmentation_2/dataset.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Code/pytorch/Segmentation_2/train.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1wjBfxFTukzyrEolxo0u3fBdhYO" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -76,7 +70,29 @@
       <recent name="C:\Users\Emily\Documents\GitHub\ML-BLIF\Code" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.evaluate">
+  <component name="RunManager" selected="Python.train">
+    <configuration name="dataset" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ML-BLIF" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Code/pytorch/Segmentation_2" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Code/pytorch/Segmentation_2/dataset.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="evaluate" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ML-BLIF" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -121,7 +137,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="model" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="model (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ML-BLIF" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -129,12 +145,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Code/TensorFlow" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Code/pytorch/Segmentation_2" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Code/TensorFlow/model.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Code/pytorch/Segmentation_2/model.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -143,7 +159,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="prepare_data (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="train" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ML-BLIF" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -151,34 +167,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Code/TensorFlow" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Code/pytorch/Segmentation_2" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Code/TensorFlow/prepare_data.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="prepare_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="ML-BLIF" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Code/TensorFlow" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\TensorFlow\prepare_data.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Code/pytorch/Segmentation_2/train.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -188,19 +182,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.prepare_data" />
-      <item itemvalue="Python.prepare_data (1)" />
-      <item itemvalue="Python.model" />
       <item itemvalue="Python.load_classify (1)" />
       <item itemvalue="Python.evaluate" />
+      <item itemvalue="Python.dataset" />
+      <item itemvalue="Python.train" />
+      <item itemvalue="Python.model (1)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.train" />
+        <item itemvalue="Python.model (1)" />
+        <item itemvalue="Python.dataset" />
         <item itemvalue="Python.evaluate" />
         <item itemvalue="Python.load_classify (1)" />
-        <item itemvalue="Python.model" />
-        <item itemvalue="Python.prepare_data (1)" />
-        <item itemvalue="Python.prepare_data" />
       </list>
     </recent_temporary>
   </component>
@@ -278,6 +272,7 @@
       <workItem from="1632226170579" duration="110000" />
       <workItem from="1632339084596" duration="6000" />
       <workItem from="1632750157285" duration="2285000" />
+      <workItem from="1632757776980" duration="5562000" />
     </task>
     <task id="LOCAL-00001" summary="validation und visualisierung hinzugefügt">
       <created>1632141573670</created>
@@ -314,10 +309,13 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ML_BLIF$read_pixels_without_mp.coverage" NAME="read_pixels_without_mp Coverage Results" MODIFIED="1629992289765" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code/scikit" />
     <SUITE FILE_PATH="coverage/ML_BLIF$py_torch.coverage" NAME="py_torch Coverage Results" MODIFIED="1629392396029" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code/pytorch" />
+    <SUITE FILE_PATH="coverage/ML_BLIF$train.coverage" NAME="train Coverage Results" MODIFIED="1632764313532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code/pytorch/Segmentation_2" />
     <SUITE FILE_PATH="coverage/ML_BLIF$edit.coverage" NAME="edit Coverage Results" MODIFIED="1629051119628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Azure" />
     <SUITE FILE_PATH="coverage/ML_BLIF$prepare_data__1_.coverage" NAME="prepare_data (1) Coverage Results" MODIFIED="1631543612848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code/TensorFlow" />
     <SUITE FILE_PATH="coverage/ML_BLIF$Sphinx_Task_in_Sphinx_Task_in_.coverage" NAME="Sphinx Task in Sphinx Task in  Coverage Results" MODIFIED="1629534809249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/ML_BLIF$model__1_.coverage" NAME="model (1) Coverage Results" MODIFIED="1632762396471" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code/pytorch/Segmentation_2" />
     <SUITE FILE_PATH="coverage/ML_BLIF$load_data__1_.coverage" NAME="load_data (1) Coverage Results" MODIFIED="1629448698244" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code/pytorch" />
+    <SUITE FILE_PATH="coverage/ML_BLIF$dataset.coverage" NAME="dataset Coverage Results" MODIFIED="1632761048773" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code/pytorch/Segmentation_2" />
     <SUITE FILE_PATH="coverage/ML_BLIF$mlp_tf.coverage" NAME="mlp_tf Coverage Results" MODIFIED="1629194516675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code/tf" />
     <SUITE FILE_PATH="coverage/ML_BLIF$xml_to_csv.coverage" NAME="xml_to_csv Coverage Results" MODIFIED="1629377192001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code/tf_new/convert" />
     <SUITE FILE_PATH="coverage/ML_BLIF$evaluate.coverage" NAME="evaluate Coverage Results" MODIFIED="1632077407592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code/pytorch/classification" />
