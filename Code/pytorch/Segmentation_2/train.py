@@ -1,75 +1,91 @@
-import dataset as ds
-from model import NeuralNetwork
+import segmentation_models_pytorch as smp
 import torch
-import torch.nn as nn
+from catalyst import dl, utils
+from torch.utils.data import DataLoader
 
-def main():
+import dataset as ds
+import transformations
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(device)
+
+
+def catalyst(model, loss, optimizer, train_dl, valid_dl, epochs):
+    loaders = {
+        "train": train_dl,
+        "valid": valid_dl
+    }
+    runner = dl.SupervisedRunner(
+        input_key="features", output_key="logits", target_key="targets", loss_key="loss"
+    )
+    runner.train(
+        model=model,
+        loaders=loaders,
+        criterion=loss,
+        optimizer=optimizer,
+        num_epochs=epochs,
+        logdir="./logs4",
+        verbose=True,
+        valid_loader="valid",
+        valid_metric="loss",
+        minimize_valid_metric=True,
+        callbacks=[
+            dl.IOUCallback(input_key="logits", target_key="targets"),
+            dl.DiceCallback(input_key="logits", target_key="targets"),
+            dl.TrevskyCallback(input_key="logits", target_key="targets", alpha=0.2),
+
+        ]
+    )
+
+
+def main(mode):
     """
     Main methode. Hier werden die Data loader abgerufen, das Neurale netzwerk auf das Device transferiert. Als Loss Function wird CrossEntropyLoss gewählt und also
     optimizer Adam mit einer Learning rate von 1*10^-3. Schließlich wird für eine gegebene epoch zahl jedes mal eine Trainings und Test loop ausgeführt.
     """
-    train_dataloader, test_dataloader = ds.Builder(1)  # Wenn color = grayscale ist funktioniert es schon
-    model = NeuralNetwork()
-    learning_rate = 1e-3
-    # Initialize the loss function
-    loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    epochs = 10
-    for t in range(epochs):
-        print(f"Epoch {t + 1}\n-------------------------------")
-        train_loop(train_dataloader, model, loss_fn, optimizer)
-        test_loop(test_dataloader, model, loss_fn)
-    print("Done!")
-    torch.save(model, model.pth)
+
+    ENCODER = "resnet152"
+    ENCODER_WEIGHTS = "imagenet"
+
+    model = smp.Unet(classes=4, activation="softmax2d", encoder_name=ENCODER, encoder_weights=ENCODER_WEIGHTS)
+    preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
+
+    train_dl, valid_dl = getLoaders(preprocessing_fn)
+
+    loss_fn = smp.utils.losses.DiceLoss()
+
+    optimizer = torch.optim.Adam([
+        {'params': model.decoder.parameters(), 'lr': 1e-4},
+        {'params': model.encoder.parameters(), 'lr': 1e-6},
+    ])
+
+    epochs = 15*2
+    if mode == "new":
+        catalyst(model=model, loss=loss_fn, optimizer=optimizer, train_dl=train_dl, valid_dl=valid_dl, epochs=epochs)
+    elif mode == "continue":
+        checkpoint = utils.torch.load_checkpoint(
+            r"C:\Users\Emily\Documents\GitHub\ML-BLIF\Code\pytorch\Segmentation_2\logs3\checkpoints\best_full.pth")
+        utils.torch.unpack_checkpoint(checkpoint=checkpoint, model=model, criterion=loss_fn, optimizer=optimizer)
+        model.eval()
+        catalyst(model=model, loss=loss_fn, optimizer=optimizer, train_dl=train_dl, valid_dl=valid_dl, epochs=epochs)
 
 
-def train_loop(dataloader, model, loss_fn, optimizer):
-    """
-    Code stammt aus der Tutorial seite von Pytorch: https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html
-    Iteriert über das datenset und Konvergiert zu Optimalen Parametern
-    :param dataloader: Data Loader für die Trainings daten
-    :param model: Das eigentliche mdel
-    :param loss_fn: Die vordefinierte Loss function
-    :param optimizer Den Vordefinierten Optimizer
-    """
-    size = len(dataloader.dataset)
-    for batch, (X, y) in enumerate(dataloader):
-        # Compute prediction and loss
-        pred = model(X)
-        loss = loss_fn(pred, y)
+def getLoaders(func):
+    train_ds = ds.Dataset(r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\splitted\train\img",
+                          r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\splitted\train\mask", size=128 * 8,
+                          augmentation=transformations.get_training_augmentation(),
+                          preprocessing=transformations.get_preprocessing(preprocessing_fn=func)
+                          )
+    valid_ds = ds.Dataset(r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\splitted\valid\img",
+                          r"C:\Users\Emily\Documents\Bachelor_Drohnen_Bilder\splitted\valid\mask", size=128 * 8,
+                          augmentation=transformations.get_validation_augmentation(),
+                          preprocessing=transformations.get_preprocessing(preprocessing_fn=func)
+                          )
 
-        # Backpropagation
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-        if batch % 100 == 0:
-            loss, current = loss.item(), batch * len(X)
-            print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
-
-
-def test_loop(dataloader, model, loss_fn):
-    """
-    Code stammt aus der Tutorial seite von Pytorch: https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html
-    Iteriert über das Datenset um die model Performance zu bewerten
-    :param dataloader: Data Loader für die Test daten
-    :param model: Das eigentliche Model
-    :param loss_fn: Die vordefinierte Loss function
-    """
-    size = len(dataloader.dataset)
-    num_batches = len(dataloader)
-    test_loss, correct = 0, 0
-
-    with torch.no_grad():
-        for X, y in dataloader:
-            pred = model(X)
-            test_loss += loss_fn(pred, y).item()
-            correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-
-    test_loss /= num_batches
-    correct /= size
-    print(f"Test Error: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+    train_dl = DataLoader(train_ds, batch_size=16)
+    valid_dl = DataLoader(valid_ds, batch_size=4)
+    return train_dl, valid_dl
 
 
 if __name__ == '__main__':
-    main()
+    main(mode="continue")

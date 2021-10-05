@@ -85,7 +85,7 @@ class Dataset(BaseDataset):
         try:
             self.class_values = [self.CLASSES.index(cls.lower()) for cls in classes]
         except TypeError:
-            self.class_values = [0,1,2]
+            self.class_values = [0,1,2,3]
         for idx, val in enumerate(self.class_values):
             self.class_values[idx] = self.look_up[val]
 
